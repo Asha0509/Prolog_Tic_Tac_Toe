@@ -1,0 +1,57 @@
+% Represent the board as a list of 9 elements
+% empty cells are represented by '_'
+
+% Display the board
+display_board([A, B, C, D, E, F, G, H, I]) :-
+    write(A), write(' | '), write(B), write(' | '), write(C), nl,
+    write('--+---+--'), nl,
+    write(D), write(' | '), write(E), write(' | '), write(F), nl,
+    write('--+---+--'), nl,
+    write(G), write(' | '), write(H), write(' | '), nl, nl.
+
+% Check if a player wins
+win(Player, [Player, Player, Player, _, _, _, _, _, _]). % Row 1
+win(Player, [_, _, _, Player, Player, Player, _, _, _]). % Row 2
+win(Player, [_, _, _, _, _, _, Player, Player, Player]). % Row 3
+win(Player, [Player, _, _, Player, _, _, Player, _, _]). % Column 1
+win(Player, [_, Player, _, _, Player, _, _, Player, _]). % Column 2
+win(Player, [_, _, Player, _, _, Player, _, _, Player]). % Column 3
+win(Player, [Player, _, _, _, Player, _, _, _, Player]). % Diagonal 1
+win(Player, [_, _, Player, _, Player, _, Player, _, _]). % Diagonal 2
+
+% Check if the board is full (draw)
+draw(Board) :- \+ member('_', Board).
+
+% Make a move
+make_move(Board, Index, Player, NewBoard) :-
+    nth0(Index, Board, '_'),   % Check if the cell is empty
+    replace(Board, Index, Player, NewBoard).
+
+% Replace an element in the list
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]) :-
+    I > 0,
+    I1 is I - 1,
+    replace(T, I1, X, R).
+
+% Play the game
+play(Board, Player) :-
+    display_board(Board),
+    (   win('X', Board) -> write('Player X wins!'), nl
+    ;   win('O', Board) -> write('Player O wins!'), nl
+    ;   draw(Board) -> write('It\'s a draw!'), nl
+    ;   write('Player '), write(Player), write(', enter your move (0-8): '),
+        read(Index),
+        make_move(Board, Index, Player, NewBoard),
+        switch_player(Player, NextPlayer),
+        play(NewBoard, NextPlayer)
+    ).
+
+% Switch players
+switch_player('X', 'O').
+switch_player('O', 'X').
+
+% Start the game
+start :-
+    InitialBoard = ['_', '_', '_', '_', '_', '_', '_', '_', '_'],
+    play(InitialBoard, 'X').
