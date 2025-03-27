@@ -76,9 +76,4 @@ Feel free to fork, modify, and submit pull requests! Contributions are welcome.
 
 ---
 
-## **License** 📜  
-This project is open-source and licensed under the **MIT License**.  
-
----
-
 Enjoy playing **Tic-Tac-Toe in Prolog**! 🎉🔴❌
